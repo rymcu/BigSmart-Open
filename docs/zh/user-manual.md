@@ -39,20 +39,23 @@
 
 ### 3.1 使用仓库内合并固件烧录
 
-当前仓库已提供三份 BigSmart 合并固件：
+当前仓库已提供 BigSmart 合并固件：
 
 ```text
+firmware/rymcu-V2.3.28-merged.bin
 firmware/rymcu-V2.3.19-merged.bin
 firmware/xiaozhi-esp32-merged.bin
 firmware/espressif-brookesia-merged.bin
 ```
 
-默认建议先烧录 RYMCU 官方固件 `rymcu-V2.3.19-merged.bin`。
+默认建议先烧录 RYMCU 官方固件 `rymcu-V2.3.28-merged.bin`。旧版 `rymcu-V2.3.19-merged.bin` 仍保留用于回退。
+
+V2.3.28 预编译固件包含天气、日历、Codex 状态应用、Smart Home MQTT/Endpoint、NES 启动器和 NES 专用启动模式。该文件不包含 2026-07-28 提交 `b1d1c08` 中后续的 NES 显示、音频和音量控制调整。
 
 可使用 ESP-IDF、esptool 或图形化烧录工具写入 ESP32-S3。若使用命令行，常见方式为：
 
 ```powershell
-esptool.py --chip esp32s3 -p COM端口 -b 460800 write_flash 0x0 firmware\rymcu-V2.3.19-merged.bin
+esptool.py --chip esp32s3 -p COM端口 -b 460800 write_flash 0x0 firmware\rymcu-V2.3.28-merged.bin
 ```
 
 ### 3.2 进入下载模式
@@ -193,9 +196,22 @@ esptool.py --chip esp32s3 -p COM端口 -b 460800 write_flash 0x0 firmware\rymcu-
 }
 ```
 
-## 10. RGB 灯与智能家居 MQTT
+## 10. 天气、日历、Codex 与 NES
 
-### 10.1 直接控制 RGB
+V2.3.28 固件在 Launcher 中新增或完善了多个应用入口：
+
+| 应用 | 说明 |
+|------|------|
+| Weather | 查看联网天气信息 |
+| Calendar | 查看日历信息 |
+| Codex | 查看 Codex 运行状态和桥接设置入口 |
+| NES | 从 SD 卡选择 `.nes` ROM，并重启进入 NES 专用启动模式 |
+
+Codex 应用只提供设备端状态和桥接设置入口；PC 端桥接脚本不随 BigSmart-Open 仓库发布。NES 相关体验以 V2.3.28 预编译固件为准，不包含 2026-07-28 提交 `b1d1c08` 中后续的 NES 显示、音频和音量控制调整。
+
+## 11. RGB 灯与 Smart Home MQTT/Endpoint
+
+### 11.1 直接控制 RGB
 
 设置 RGB LED：
 
@@ -219,62 +235,75 @@ esptool.py --chip esp32s3 -p COM端口 -b 460800 write_flash 0x0 firmware\rymcu-
 }
 ```
 
-### 10.2 配置 MQTT
+### 11.2 Smart Home MQTT 概览
 
-配置 broker：
+V2.3.28 固件使用 RYMCU Smart Home MQTT 协议控制第三方智能家居设备。底层 MQTT topic 根前缀为 `rymcu/home/v1`，设备需要通过配对码、发现广播、状态上报和命令 topic 与 BigSmart 交互。
+
+上层控制入口有两种：
+
+- 本地小智会话 MCP：语音服务直接调用设备上的 `self.smart_home.*` 工具。
+- 外部 MCP Endpoint Bridge：通过配网写入的 Endpoint 调用同一批 `self.smart_home.*` 工具，最终仍由 Smart Home MQTT 下发。
+
+常用工具：
+
+| 功能 | MCP 工具 |
+|------|----------|
+| 设置 MQTT broker | `self.smart_home.set_mqtt_endpoint` |
+| 连接 Smart Home MQTT | `self.smart_home.connect` |
+| 断开连接 | `self.smart_home.disconnect` |
+| 查询状态 | `self.smart_home.get_status` |
+| 扫描设备 | `self.smart_home.scan_devices` |
+| 列出设备 | `self.smart_home.list_devices` |
+| 控制设备 | `self.smart_home.control_device` |
+
+设置 broker：
 
 ```json
 {
-  "tool": "self.mqtt.configure",
+  "tool": "self.smart_home.set_mqtt_endpoint",
   "arguments": {
-    "broker_address": "broker-cn.emqx.io",
-    "port": 1883,
-    "client_id": "bigsmart_001",
-    "use_tls": false
+    "endpoint": "broker-cn.emqx.io:1883",
+    "confirm": true
   }
 }
 ```
 
-连接 MQTT：
+连接并扫描设备：
 
 ```json
 {
-  "tool": "self.mqtt.connect",
+  "tool": "self.smart_home.connect",
   "arguments": {}
 }
 ```
 
-订阅灯控主题：
+```json
+{
+  "tool": "self.smart_home.scan_devices",
+  "arguments": {}
+}
+```
+
+控制已发现设备：
 
 ```json
 {
-  "tool": "self.mqtt.subscribe_light",
+  "tool": "self.smart_home.control_device",
   "arguments": {
-    "topic": "home/living_room/light"
+    "device_id": "lamp-bedroom-01",
+    "action": "turn_on",
+    "entity_id": "main",
+    "params": "{}"
   }
 }
 ```
 
-支持的灯控消息示例：
+配网自定义数据也支持两个前缀：
 
-```json
-{"state":"ON","brightness":80,"color":{"r":255,"g":100,"b":50}}
-```
+- `mqtt:<host[:port]>`：保存 Smart Home MQTT broker。
+- `mcp:<endpoint>`：保存外部 MCP Endpoint 地址。
 
-### 10.3 发布控制消息
-
-```json
-{
-  "tool": "self.mqtt.publish",
-  "arguments": {
-    "topic": "home/living_room/humidifier",
-    "payload": "{\"state\":\"ON\"}",
-    "qos": 0
-  }
-}
-```
-
-## 11. IMU 姿态与晃动检测
+## 12. IMU 姿态与晃动检测
 
 BigSmart 板载 QMI8658 六轴传感器。固件启动后会周期读取传感器数据，并启动晃动检测。可通过 MCP 工具读取姿态角、加速度和陀螺仪数据：
 
@@ -292,7 +321,7 @@ BigSmart 板载 QMI8658 六轴传感器。固件启动后会周期读取传感�
 - 设备姿态显示。
 - 交互装置触发条件。
 
-## 12. 摄像头使用
+## 13. 摄像头使用
 
 BigSmart 使用 GC0308 摄像头，硬件支持 640 x 480 @ 16 FPS。参考固件采用懒加载方式：启动阶段不立即初始化摄像头，首次请求摄像头能力时才初始化，以降低启动阶段内存压力。
 
@@ -302,7 +331,7 @@ BigSmart 使用 GC0308 摄像头，硬件支持 640 x 480 @ 16 FPS。参考固�
 - 需要图像能力时再调用摄像头，避免与音频、Wi-Fi、大型 UI 同时抢占内存。
 - 若画面方向异常，可检查固件中的镜像和翻转设置。
 
-## 13. 常见问题
+## 14. 常见问题
 
 | 问题 | 可能原因 | 处理方法 |
 |------|----------|----------|
@@ -313,15 +342,17 @@ BigSmart 使用 GC0308 摄像头，硬件支持 640 x 480 @ 16 FPS。参考固�
 | 语音识别差 | 环境噪声大、离麦克风太远、AEC 状态不合适 | 靠近设备说话，尝试双击 Boot 切换 AEC |
 | SD 卡无法挂载 | 未格式化 FAT32、接触不良、卡损坏 | 重新格式化，重新插拔，更换 SD 卡 |
 | 找不到 MP3 | 路径错误或文件格式不支持 | 使用绝对路径，确认文件后缀为 `.mp3` |
-| MQTT 连接失败 | broker 地址错误、端口错误、网络不可达 | 查询 `self.mqtt.get_status`，重新配置 broker |
+| Smart Home MQTT 连接失败 | broker 地址错误、端口错误、网络不可达或未启用 | 查询 `self.smart_home.get_status`，在 Settings > Advanced 或 MCP 工具中重新配置 broker |
+| NES 看不到游戏 | SD 卡未挂载、目录不符合固件扫描规则或 ROM 后缀不正确 | 确认 SD 卡 FAT32 可读，并放入 `.nes` ROM |
+| Codex 状态无法连接 | PC 端桥接服务未运行、桥接地址错误或不在同一局域网 | 确认设备和 PC 网络连通，并在 Codex 应用中配置正确桥接地址 |
 
-## 14. 硬件维护
+## 15. 硬件维护
 
 - 插拔屏幕、摄像头、麦克风板或其他排线前先断电。
 - 使用电池供电时注意电池极性和充电安全。
 - 外壳文件位于 `enclosure/`，修改结构时注意屏幕、按键、麦克风开孔和扬声器声腔。
 - 二次开发新外设前，先查阅 [硬件配置说明](hardware.md) 避免 GPIO 冲突。
 
-## 15. 参考资料
+## 16. 参考资料
 
 - 本项目硬件说明：[hardware.md](hardware.md)
