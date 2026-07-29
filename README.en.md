@@ -80,10 +80,12 @@ BigSmart-Open/
 
 ## Firmware
 
-- [RYMCU official firmware](firmware/rymcu-V2.3.19-merged.bin)
+- [RYMCU official firmware](firmware/rymcu-V2.3.28-merged.bin)
 - [Xiaozhi AI official firmware](firmware/xiaozhi-esp32-merged.bin)
 - [Espressif official firmware](firmware/espressif-brookesia-merged.bin)
 - [Firmware flashing guide](firmware/README.en.md)
+
+The recommended image is now `rymcu-V2.3.28-merged.bin`. `rymcu-V2.3.19-merged.bin` remains available as a legacy fallback image.
 
 ## Feature Showcase
 

@@ -14,6 +14,8 @@ For complete build, flashing, and hardware details, see the [User Manual](user-m
 
 The firmware images in this repository are merged images. When using a flashing tool, write the image to `Flash` offset `0x0`.
 
+The recommended image is `rymcu-V2.3.28-merged.bin`; `rymcu-V2.3.19-merged.bin` remains available as a legacy fallback. The V2.3.28 prebuilt image includes Weather, Calendar, Codex Status, Smart Home MQTT/Endpoint, the NES launcher, and NES dedicated boot mode. It does not include the later NES display, audio, and volume-control changes from the 2026-07-28 commit `b1d1c08`.
+
 ## 2. Power On and Home Screen
 
 ### 2.1 Power On
@@ -35,10 +37,14 @@ Swipe left or right on the `Home` screen to switch app pages. Common apps includ
 | Settings | Configure Wi-Fi, server, display, and other settings |
 | Music | Play MP3 files from the SD card |
 | Radio | Play internet radio |
+| Weather | View weather information |
+| Calendar | View the calendar |
 | Video | Play video resources from `/sdcard/videos` |
 | Image | View image resources |
 | Camera | Use the GC0308 camera |
 | Gyro | View QMI8658 attitude and sensor information |
+| Codex | View Codex status and bridge settings entry |
+| NES | Select an NES ROM from the SD card and reboot into NES dedicated boot mode |
 | Games | Enter game-related features |
 | USB Disk | Reboot into USB disk mode and share the SD card with a PC |
 
@@ -172,9 +178,12 @@ Tap the `Games app` to play multiple games.
 
 | Feature | Description |
 |---------|-------------|
+| Weather and Calendar | V2.3.28 firmware provides Weather and Calendar app entries |
+| Codex Status | Shows Codex runtime status and bridge settings on the device |
 | RGB LED | Set RGB colors and turn the light off |
 | IMU attitude and shake | QMI8658 reads attitude data and supports shake detection |
-| Smart home MQTT | Configure broker, connect, publish, subscribe, and control example devices |
+| Smart Home MQTT/Endpoint | Configures the Smart Home MQTT broker and routes MCP Endpoint calls to the same smart home tools |
+| NES dedicated boot mode | Selects an SD-card ROM from the NES launcher and reboots into the dedicated mode |
 | Camera | GC0308 is lazily initialized when opening Camera or requesting camera capability for the first time |
 
 ## 11. Troubleshooting
@@ -191,6 +200,8 @@ Tap the `Games app` to play multiple games.
 | Video speed is wrong | Make sure the same-name `.fps` file contains an integer frame rate |
 | MP3 playback fails | Use an absolute `/sdcard/...` path and confirm the `.mp3` extension |
 | USB disk mode does not enter | Hold GPIO10 before startup/reset and make sure an SD card is inserted |
+| NES games are not listed | Make sure the SD card is mounted and `.nes` ROMs are in the firmware-recognized SD card directory |
+| Codex status cannot connect | Make sure the device and PC are on the same LAN and the bridge address is configured in the Codex app |
 | Voice recognition has echo | Double-click Boot while idle to toggle device-side AEC |
 
 ## 12. Next Reading

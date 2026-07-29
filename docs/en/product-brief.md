@@ -54,9 +54,11 @@ It is suitable for Xiaozhi AI terminals, offline or connected voice assistants, 
 | Device-side AEC | When `CONFIG_USE_DEVICE_AEC` is enabled, double-clicking Boot toggles AEC while idle |
 | Local music | Plays MP3 files from `/sdcard`, with play, stop, list, previous, next, and status tools |
 | Internet radio | Plays network audio streams by station name |
-| Game entry | Opens firmware-provided game-related features from the Launcher |
+| Weather and Calendar | V2.3.28 firmware provides Weather and Calendar app entries |
+| Codex Status | Shows Codex runtime status on the device and lets users configure the bridge address in the app |
+| Game entry | Opens firmware-provided game features from the Launcher, including the NES launcher and NES dedicated boot mode |
 | RGB light control | Supports direct RGB color setting and MQTT light-control topics |
-| Smart home MQTT | Supports broker configuration, connect, publish, subscribe, light subscriptions, and humidifier examples |
+| Smart Home MQTT/Endpoint | Supports Smart Home MQTT broker configuration and MCP Endpoint routing to the same smart home tools |
 | IMU attitude | Reads QMI8658 attitude angles, acceleration, gyroscope data, and shake events |
 | Camera | Lazy initialization on first camera request to reduce startup memory pressure |
 
