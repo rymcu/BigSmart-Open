@@ -50,6 +50,13 @@ The enclosure is open source and can be used directly for 3D printing.
 |-----------|--------------|
 | <img src="images/top.png" alt="BigSmart top cover" width="549"> | <img src="images/bottom.png" alt="BigSmart bottom shell" width="601"> |
 
+The `enclosure/` directory also includes STEP models for the mainboard and the microphone/button daughter board:
+
+- `3D_BigSmart_2026-01-15.step`: Mainboard model and source for the website's interactive 3D board model.
+- `3D_bs-mic_2026-02-01.step`: Microphone/button daughter board model.
+
+After modifying the mainboard STEP file, run `pnpm model:build` from `site/` to regenerate `site/public/models/bigsmart-mainboard.glb` and its metadata.
+
 ## Repository Layout
 
 ```text

@@ -50,6 +50,13 @@ RYMCU BigSmart 已合并到以下官方开源项目，方便用户基于主线�
 |----------|----------|
 | <img src="images/top.png" alt="BigSmart 外壳上盖" width="549"> | <img src="images/bottom.png" alt="BigSmart 外壳底壳" width="601"> |
 
+`enclosure/` 同时提供主板与麦克风按键副板的 STEP 结构模型：
+
+- `3D_BigSmart_2026-01-15.step`：主板结构模型，也是网站 3D 主板模型的生成源。
+- `3D_bs-mic_2026-02-01.step`：麦克风按键副板结构模型。
+
+修改主板 STEP 后，可在 `site/` 目录运行 `pnpm model:build`，重新生成 `site/public/models/bigsmart-mainboard.glb` 及其元数据。
+
 ## 目录结构
 
 ```text
