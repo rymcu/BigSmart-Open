@@ -13,10 +13,15 @@ const types = new Map([
   ['.css', 'text/css; charset=utf-8'],
   ['.jpg', 'image/jpeg'],
   ['.jpeg', 'image/jpeg'],
+  ['.md', 'text/markdown; charset=utf-8'],
   ['.png', 'image/png'],
+  ['.webp', 'image/webp'],
   ['.ico', 'image/x-icon'],
   ['.svg', 'image/svg+xml; charset=utf-8'],
-  ['.txt', 'text/plain; charset=utf-8']
+  ['.glb', 'model/gltf-binary'],
+  ['.txt', 'text/plain; charset=utf-8'],
+  ['.wasm', 'application/wasm'],
+  ['.woff2', 'font/woff2']
 ])
 
 function send(res, status, body, type = 'text/plain; charset=utf-8') {
@@ -68,5 +73,5 @@ http.createServer((req, res) => {
   })
   fs.createReadStream(filePath).pipe(res)
 }).listen(port, '127.0.0.1', () => {
-  console.log(`Preview: http://127.0.0.1:${port}${prefix}/zh`)
+  console.log(`Preview: http://127.0.0.1:${port}${prefix}/`)
 })

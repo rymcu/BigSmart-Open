@@ -4,10 +4,11 @@ import { joinURL } from 'ufo'
 
 const route = useRoute()
 const toast = useToast()
-const { text } = useDocsLocale()
+const { text } = useSiteLocale()
 const { copy, copied } = useClipboard()
-const { app } = useRuntimeConfig()
-const siteUrl = 'https://rymcu.github.io/BigSmart-Open'
+const runtimeConfig = useRuntimeConfig()
+const { app } = runtimeConfig
+const siteUrl = runtimeConfig.public.siteUrl.replace(/\/$/, '')
 
 const rawPath = computed(() => joinURL(app.baseURL, `raw${route.path}.md`))
 const mdPath = computed(() => joinURL(siteUrl, `raw${route.path}.md`))

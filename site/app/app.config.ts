@@ -12,11 +12,11 @@ export default defineAppConfig({
     }
   },
   seo: {
-    siteName: 'RYMCU BigSmart Docs'
+    siteName: 'RYMCU BigSmart'
   },
   header: {
     title: 'RYMCU BigSmart',
-    to: '/zh',
+    to: '/',
     logo: {
       alt: '',
       light: '',
@@ -32,7 +32,7 @@ export default defineAppConfig({
     }]
   },
   footer: {
-    credits: `RYMCU BigSmart Docs © ${new Date().getFullYear()}`,
+    credits: `RYMCU BigSmart © ${new Date().getFullYear()}`,
     colorMode: false,
     links: [{
       'icon': 'i-simple-icons-github',

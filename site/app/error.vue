@@ -5,7 +5,7 @@ const props = defineProps<{
   error: NuxtError
 }>()
 
-const { htmlLang, uiLocale, localePrefix, text, filterNavigation, filterSearchSections } = useDocsLocale()
+const { locale, htmlLang, uiLocale, homePath, docsRoot, isDocsRoute, text } = useSiteLocale()
 const localizedError = computed(() => ({
   ...props.error,
   message: text.value.pageNotFoundDescription,
@@ -23,14 +23,19 @@ useSeoMeta({
   description: text.value.pageNotFoundDescription
 })
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'))
-const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {
+const { data: zhNavigation } = await useAsyncData('error-navigation-zh', () => queryCollectionNavigation('docsZh'))
+const { data: enNavigation } = await useAsyncData('error-navigation-en', () => queryCollectionNavigation('docsEn'))
+const { data: zhFiles } = useLazyAsyncData('error-search-zh', () => queryCollectionSearchSections('docsZh'), {
   server: false
 })
-const filteredNavigation = computed(() => filterNavigation(navigation.value))
-const filteredFiles = computed(() => filterSearchSections(files.value))
+const { data: enFiles } = useLazyAsyncData('error-search-en', () => queryCollectionSearchSections('docsEn'), {
+  server: false
+})
+const navigation = computed(() => locale.value === 'en' ? enNavigation.value : zhNavigation.value)
+const files = computed(() => locale.value === 'en' ? enFiles.value : zhFiles.value)
+const redirectPath = computed(() => isDocsRoute.value ? docsRoot.value : homePath.value)
 
-provide('navigation', filteredNavigation)
+provide('navigation', navigation)
 </script>
 
 <template>
@@ -39,15 +44,15 @@ provide('navigation', filteredNavigation)
 
     <UError
       :error="localizedError"
-      :redirect="localePrefix"
+      :redirect="redirectPath"
     />
 
     <AppFooter />
 
     <ClientOnly>
       <LazyUContentSearch
-        :files="filteredFiles"
-        :navigation="filteredNavigation"
+        :files="files"
+        :navigation="navigation"
         :title="text.searchTitle"
         :description="text.searchDescription"
         :placeholder="text.searchPlaceholder"

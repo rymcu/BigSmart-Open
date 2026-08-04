@@ -1,4 +1,5 @@
 import { queryCollection } from '@nuxt/content/server'
+import { joinURL } from 'ufo'
 
 export default defineMcpTool({
   description: `Lists all available documentation pages with their categories and basic information.
@@ -23,18 +24,21 @@ OUTPUT: Returns a structured list with:
   handler: async () => {
     const event = useEvent()
     const url = getRequestURL(event)
-    const siteUrl = import.meta.dev ? `${url.protocol}//${url.hostname}:${url.port}` : url.origin
+    const runtimeConfig = useRuntimeConfig(event)
+    const origin = `${url.protocol}//${url.host}`
+    const siteUrl = import.meta.dev ? origin : joinURL(origin, runtimeConfig.app.baseURL)
 
     try {
-      const pages = await queryCollection(event, 'docs')
-        .select('title', 'path', 'description')
-        .all()
+      const [zhPages, enPages] = await Promise.all([
+        queryCollection(event, 'docsZh').select('title', 'path', 'description').all(),
+        queryCollection(event, 'docsEn').select('title', 'path', 'description').all()
+      ])
 
-      const result = pages.map(page => ({
+      const result = [...zhPages, ...enPages].map(page => ({
         title: page.title,
         path: page.path,
         description: page.description,
-        url: `${siteUrl}${page.path}`
+        url: joinURL(siteUrl, page.path)
       }))
 
       return {

@@ -23,3 +23,17 @@
 :root {
   --ui-container: var(--container-8xl);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+.flagship-page section[id] {
+  scroll-margin-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

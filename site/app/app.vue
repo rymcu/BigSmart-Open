@@ -1,20 +1,35 @@
 <script setup lang="ts">
 const { seo } = useAppConfig()
-const { htmlLang, uiLocale, text, filterNavigation, filterSearchSections } = useDocsLocale()
+const { locale, htmlLang, uiLocale, text, isDocsRoute } = useSiteLocale()
+const runtimeConfig = useRuntimeConfig()
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'))
-const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {
+const faviconUrl = `${runtimeConfig.app.baseURL}favicon.ico`
+
+const { data: zhNavigation } = await useAsyncData('navigation-zh', () => queryCollectionNavigation('docsZh'))
+const { data: enNavigation } = await useAsyncData('navigation-en', () => queryCollectionNavigation('docsEn'))
+const { data: zhFiles } = useLazyAsyncData('search-zh', () => queryCollectionSearchSections('docsZh'), {
   server: false
 })
-const filteredNavigation = computed(() => filterNavigation(navigation.value))
-const filteredFiles = computed(() => filterSearchSections(files.value))
+const { data: enFiles } = useLazyAsyncData('search-en', () => queryCollectionSearchSections('docsEn'), {
+  server: false
+})
+const navigation = computed(() => {
+  const localizedNavigation = locale.value === 'en' ? enNavigation.value : zhNavigation.value
+
+  if (locale.value === 'en' && localizedNavigation?.length === 1 && localizedNavigation[0]?.path === '/en') {
+    return localizedNavigation[0].children || []
+  }
+
+  return localizedNavigation
+})
+const files = computed(() => locale.value === 'en' ? enFiles.value : zhFiles.value)
 
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ],
   link: [
-    { rel: 'icon', href: './favicon.ico' }
+    { rel: 'icon', href: faviconUrl }
   ],
   htmlAttrs: {
     lang: htmlLang
@@ -27,7 +42,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-provide('navigation', filteredNavigation)
+provide('navigation', navigation)
 </script>
 
 <template>
@@ -46,8 +61,9 @@ provide('navigation', filteredNavigation)
 
     <ClientOnly>
       <LazyUContentSearch
-        :files="filteredFiles"
-        :navigation="filteredNavigation"
+        v-if="isDocsRoute"
+        :files="files"
+        :navigation="navigation"
         :title="text.searchTitle"
         :description="text.searchDescription"
         :placeholder="text.searchPlaceholder"

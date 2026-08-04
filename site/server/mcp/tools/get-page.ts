@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { queryCollection } from '@nuxt/content/server'
+import { joinURL } from 'ufo'
+import { getSiteLocale, isDocsPath, legacyDocsRedirect } from '#shared/utils/siteRoutes'
 
 export default defineMcpTool({
   description: `Retrieves the full content and details of a specific documentation page.
@@ -14,17 +16,25 @@ WHEN NOT TO USE: If you don't know the exact path and need to search/explore, us
 
 WORKFLOW: This tool returns the complete page content including title, description, and full markdown. Use this when you need to provide detailed answers or code examples from specific documentation pages.`,
   inputSchema: {
-    path: z.string().describe('The page path from list-pages or provided by the user (e.g., /getting-started/installation)')
+    path: z.string().describe('The page path from list-pages or provided by the user (e.g., /docs/quick-start)')
   },
   cache: '1h',
   handler: async ({ path }) => {
     const event = useEvent()
     const url = getRequestURL(event)
-    const siteUrl = import.meta.dev ? `${url.protocol}//${url.hostname}:${url.port}` : url.origin
+    const runtimeConfig = useRuntimeConfig(event)
+    const origin = `${url.protocol}//${url.host}`
+    const siteUrl = import.meta.dev ? origin : joinURL(origin, runtimeConfig.app.baseURL)
+    const publicPath = path === '/en' ? '/en/docs' : legacyDocsRedirect(path) || path
 
     try {
-      const page = await queryCollection(event, 'docs')
-        .where('path', '=', path)
+      if (!isDocsPath(publicPath)) {
+        throw createError({ statusCode: 404, statusMessage: 'Page not found' })
+      }
+
+      const collection = getSiteLocale(publicPath) === 'en' ? 'docsEn' : 'docsZh'
+      const page = await queryCollection(event, collection)
+        .where('path', '=', publicPath)
         .select('title', 'path', 'description')
         .first()
 
@@ -35,7 +45,7 @@ WORKFLOW: This tool returns the complete page content including title, descripti
         }
       }
 
-      const content = await $fetch<string>(`/raw${path}.md`, {
+      const content = await $fetch<string>(`/raw${publicPath}.md`, {
         baseURL: siteUrl
       })
 
@@ -44,7 +54,7 @@ WORKFLOW: This tool returns the complete page content including title, descripti
         path: page.path,
         description: page.description,
         content,
-        url: `${siteUrl}${page.path}`
+        url: joinURL(siteUrl, page.path)
       }
 
       return {

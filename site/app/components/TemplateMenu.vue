@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { oppositeLocaleLabel, oppositeLocalePath } = useDocsLocale()
+const { oppositeLocaleLabel, oppositeLocalePath } = useSiteLocale()
 </script>
 
 <template>

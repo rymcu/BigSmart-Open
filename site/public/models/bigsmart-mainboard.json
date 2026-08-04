@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "unit": "millimeter",
+  "source": {
+    "file": "3D_BigSmart_2026-01-15.step",
+    "sizeBytes": 43591290
+  },
+  "output": {
+    "file": "bigsmart-mainboard.glb",
+    "sizeBytes": 1822972,
+    "meshCount": 394,
+    "materialCount": 4,
+    "compression": "EXT_meshopt_compression",
+    "extensionsRequired": [
+      "EXT_meshopt_compression",
+      "KHR_mesh_quantization"
+    ]
+  },
+  "tessellation": {
+    "linearDeflectionType": "absolute_value",
+    "linearDeflection": 0.12,
+    "angularDeflection": 0.35
+  },
+  "model": {
+    "min": [
+      0.012,
+      -9.987,
+      -1.4
+    ],
+    "max": [
+      49.988,
+      60.746,
+      10.14
+    ],
+    "size": [
+      49.976,
+      70.734,
+      11.54
+    ],
+    "center": [
+      25,
+      25.38,
+      4.37
+    ]
+  },
+  "components": {
+    "U1": {
+      "min": [
+        0.2,
+        15.2,
+        1.6
+      ],
+      "max": [
+        25.701,
+        33.201,
+        4.71
+      ],
+      "size": [
+        25.501,
+        18.001,
+        3.11
+      ],
+      "center": [
+        12.95,
+        24.2,
+        3.155
+      ]
+    },
+    "U3": {
+      "min": [
+        34.5,
+        36.45,
+        1.6
+      ],
+      "max": [
+        37.5,
+        38.95,
+        2.521
+      ],
+      "size": [
+        3,
+        2.5,
+        0.921
+      ],
+      "center": [
+        36,
+        37.7,
+        2.061
+      ]
+    },
+    "U6": {
+      "min": [
+        31.748,
+        49.321,
+        1.6
+      ],
+      "max": [
+        43.252,
+        56.479,
+        3.353
+      ],
+      "size": [
+        11.504,
+        7.158,
+        1.753
+      ],
+      "center": [
+        37.5,
+        52.9,
+        2.477
+      ]
+    },
+    "U9": {
+      "min": [
+        30.51,
+        25.67,
+        1.6
+      ],
+      "max": [
+        33.51,
+        28.67,
+        2.351
+      ],
+      "size": [
+        3,
+        3,
+        0.751
+      ],
+      "center": [
+        32.01,
+        27.17,
+        1.976
+      ]
+    },
+    "U10": {
+      "min": [
+        32.69,
+        14.343,
+        1.6
+      ],
+      "max": [
+        36.71,
+        18.363,
+        2.42
+      ],
+      "size": [
+        4.02,
+        4.02,
+        0.82
+      ],
+      "center": [
+        34.7,
+        16.353,
+        2.01
+      ]
+    },
+    "U14": {
+      "min": [
+        43.8,
+        27.782,
+        1.6
+      ],
+      "max": [
+        46.8,
+        29.618,
+        2.274
+      ],
+      "size": [
+        3,
+        1.837,
+        0.674
+      ],
+      "center": [
+        45.3,
+        28.7,
+        1.937
+      ]
+    },
+    "USB1": {
+      "min": [
+        8.03,
+        52.936,
+        0.6
+      ],
+      "max": [
+        16.97,
+        60.746,
+        4.761
+      ],
+      "size": [
+        8.94,
+        7.81,
+        4.161
+      ],
+      "center": [
+        12.5,
+        56.841,
+        2.681
+      ]
+    }
+  },
+  "verification": {
+    "requiredNodes": [
+      {
+        "name": "U1",
+        "verified": true
+      },
+      {
+        "name": "U3",
+        "verified": true
+      },
+      {
+        "name": "U6",
+        "verified": true
+      },
+      {
+        "name": "U9",
+        "verified": true
+      },
+      {
+        "name": "U10",
+        "verified": true
+      },
+      {
+        "name": "U14",
+        "verified": true
+      },
+      {
+        "name": "USB1",
+        "verified": true
+      }
+    ],
+    "decodedNodeCount": 419,
+    "decodedMeshCount": 394
+  }
+}

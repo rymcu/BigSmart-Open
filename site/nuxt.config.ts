@@ -1,3 +1,19 @@
+const docsSlugs = ['', 'quick-start', 'product-brief', 'user-manual', 'hardware', 'video-converter', 'firmware']
+const newDocsRoutes = docsSlugs.flatMap(slug => [
+  slug ? `/docs/${slug}` : '/docs',
+  slug ? `/en/docs/${slug}` : '/en/docs'
+])
+const legacyDocsRoutes = [
+  ...docsSlugs.map(slug => slug ? `/zh/${slug}` : '/zh'),
+  ...docsSlugs.filter(Boolean).map(slug => `/en/${slug}`)
+]
+const rawDocsRoutes = docsSlugs.flatMap(slug => [
+  slug ? `/raw/docs/${slug}.md` : '/raw/docs.md',
+  slug ? `/raw/en/docs/${slug}.md` : '/raw/en/docs.md',
+  slug ? `/raw/zh/${slug}.md` : '/raw/zh.md',
+  slug ? `/raw/en/${slug}.md` : '/raw/en.md'
+])
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
@@ -31,6 +47,11 @@ export default defineNuxtConfig({
   ui: {
     fonts: false
   },
+  runtimeConfig: {
+    public: {
+      siteUrl: 'https://rymcu.github.io/BigSmart-Open'
+    }
+  },
 
   experimental: {
     asyncContext: true
@@ -42,8 +63,10 @@ export default defineNuxtConfig({
     prerender: {
       routes: [
         '/',
-        '/zh',
-        '/en'
+        '/en',
+        ...newDocsRoutes,
+        ...legacyDocsRoutes,
+        ...rawDocsRoutes
       ],
       crawlLinks: true
     }
@@ -61,6 +84,14 @@ export default defineNuxtConfig({
   icon: {
     provider: 'server',
     clientBundle: {
+      icons: [
+        'lucide:arrow-up-right',
+        'lucide:check',
+        'lucide:hash',
+        'lucide:menu',
+        'lucide:search',
+        'lucide:x'
+      ],
       scan: true,
       sizeLimitKb: 512
     },
@@ -75,7 +106,8 @@ export default defineNuxtConfig({
   },
 
   llms: {
-    domain: 'https://rymcu.github.io/BigSmart-Open/',
+    contentRawMarkdown: false,
+    domain: 'https://rymcu.github.io/BigSmart-Open',
     title: 'RYMCU BigSmart Docs',
     description: 'Documentation, hardware resources, firmware, and tools for the RYMCU BigSmart ESP32-S3 development board.',
     full: {
@@ -85,17 +117,11 @@ export default defineNuxtConfig({
     sections: [
       {
         title: '中文文档',
-        contentCollection: 'docs',
-        contentFilters: [
-          { field: 'path', operator: 'LIKE', value: '/zh%' }
-        ]
+        contentCollection: 'docsZh'
       },
       {
         title: 'English Documentation',
-        contentCollection: 'docs',
-        contentFilters: [
-          { field: 'path', operator: 'LIKE', value: '/en%' }
-        ]
+        contentCollection: 'docsEn'
       }
     ]
   },
