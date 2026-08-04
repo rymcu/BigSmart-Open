@@ -40,8 +40,6 @@ const { content, docsPath } = useLandingContent()
             target="_blank"
             :label="content.project.hardwareDirectoryLabel"
             icon="i-simple-icons-github"
-            color="neutral"
-            variant="solid"
             size="lg"
           />
           <UButton
@@ -52,7 +50,7 @@ const { content, docsPath } = useLandingContent()
             color="neutral"
             variant="outline"
             size="lg"
-            class="border-white/40 text-white hover:bg-white/10"
+            class="btn-on-dark-outline"
           />
           <UButton
             :to="docsPath('hardware')"
@@ -61,7 +59,7 @@ const { content, docsPath } = useLandingContent()
             color="neutral"
             variant="ghost"
             size="lg"
-            class="text-white hover:bg-white/10"
+            class="btn-on-dark-ghost"
           />
         </div>
       </div>

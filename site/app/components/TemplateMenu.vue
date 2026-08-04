@@ -9,7 +9,5 @@ const { oppositeLocaleLabel, oppositeLocalePath } = useSiteLocale()
     icon="i-lucide-languages"
     color="neutral"
     variant="ghost"
-    size="sm"
-    class="font-medium"
   />
 </template>

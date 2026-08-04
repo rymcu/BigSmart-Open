@@ -60,16 +60,16 @@ const { content, docsPath } = useLandingContent()
         <UButton
           :to="docsPath('hardware')"
           :label="content.hardware.docsLabel"
-          trailing-icon="i-lucide-arrow-right"
-          color="neutral"
-          variant="outline"
+          icon="i-lucide-book-open"
+          size="lg"
         />
         <UButton
           :to="publicAsset(content.hardware.imageFullSrc)"
           :label="content.hardware.imageOpenLabel"
           icon="i-lucide-maximize-2"
           color="neutral"
-          variant="ghost"
+          variant="outline"
+          size="lg"
           external
           target="_blank"
         />

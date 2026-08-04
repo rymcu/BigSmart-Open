@@ -4,7 +4,7 @@ import type { ContentNavigationItem } from '@nuxt/content'
 const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
 
 const { header } = useAppConfig()
-const { homePath, docsRoot, isDocsRoute, oppositeLocaleLabel, oppositeLocalePath, text } = useSiteLocale()
+const { homePath, docsRoot, isDocsRoute, text } = useSiteLocale()
 const menuText = computed(() => ({
   title: text.value.menuTitle,
   description: text.value.menuDescription
@@ -122,14 +122,6 @@ const productLinks = computed(() => text.value.productLinks.map(link => ({
           :to="docsRoot"
           :label="text.docsLabel"
           icon="i-lucide-book-open"
-          color="neutral"
-          variant="ghost"
-          class="justify-start"
-        />
-        <UButton
-          :to="oppositeLocalePath"
-          :label="oppositeLocaleLabel"
-          icon="i-lucide-languages"
           color="neutral"
           variant="ghost"
           class="justify-start"

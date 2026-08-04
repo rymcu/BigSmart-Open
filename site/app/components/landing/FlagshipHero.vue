@@ -19,7 +19,7 @@ const { content, docsPath } = useLandingContent()
     <div class="absolute inset-0 bg-black/20" />
     <div class="hero-panel absolute inset-0" />
 
-    <UContainer class="relative z-10 flex min-h-[inherit] items-center py-3 sm:py-16">
+    <UContainer class="relative z-10 flex min-h-[inherit] items-center py-12 sm:py-16">
       <div class="max-w-2xl">
         <p class="mb-5 flex items-center gap-2 text-sm font-semibold text-orange-300">
           <span class="size-2 rounded-full bg-orange-400" />
@@ -47,10 +47,11 @@ const { content, docsPath } = useLandingContent()
           <UButton
             :to="docsPath('hardware')"
             :label="content.hero.hardwareLabel"
-            icon="i-lucide-cpu"
+            icon="i-lucide-book-open"
             color="neutral"
-            variant="solid"
+            variant="outline"
             size="xl"
+            class="btn-on-dark-outline"
           />
           <UButton
             to="https://github.com/rymcu/BigSmart-Open"
@@ -60,7 +61,7 @@ const { content, docsPath } = useLandingContent()
             color="neutral"
             variant="ghost"
             size="xl"
-            class="hidden text-white hover:bg-white/10 sm:inline-flex"
+            class="btn-on-dark-ghost"
           />
         </div>
       </div>

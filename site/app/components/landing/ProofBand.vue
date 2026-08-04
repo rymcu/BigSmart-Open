@@ -11,7 +11,7 @@ const { content } = useLandingContent()
       <div
         v-for="fact in content.proof.facts"
         :key="fact.value"
-        class="border-default px-5 py-6 odd:border-r lg:border-r lg:last:border-r-0"
+        class="border-default px-4 py-6 odd:border-r max-lg:[&:nth-child(-n+2)]:border-b sm:px-6 lg:border-r lg:px-8 lg:last:border-r-0"
       >
         <p class="text-xl font-bold tracking-normal text-highlighted">
           {{ fact.value }}

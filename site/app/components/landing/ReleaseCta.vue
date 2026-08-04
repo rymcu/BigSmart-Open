@@ -8,7 +8,7 @@ const { content, docsPath } = useLandingContent()
     class="border-t border-default bg-elevated py-16 sm:py-20"
   >
     <UContainer>
-      <div class="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div class="max-w-3xl">
           <p class="text-sm font-semibold text-primary">
             {{ content.release.eyebrow }}
@@ -21,7 +21,7 @@ const { content, docsPath } = useLandingContent()
           </p>
         </div>
 
-        <div class="flex flex-wrap gap-3 lg:justify-end">
+        <div class="grid w-full gap-3 sm:w-auto sm:min-w-[22rem] sm:grid-cols-2 lg:justify-self-end">
           <UButton
             :to="docsPath('quick-start')"
             :label="content.release.quickStartLabel"

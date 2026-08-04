@@ -61,6 +61,7 @@ const landingContent = {
         loading: '正在加载 3D 主板模型...',
         error: '3D 主板模型加载失败。',
         retry: '重新加载',
+        gestureHint: '提示：双指旋转或缩放主板模型',
         componentSelectAria: '选择要查看的主板器件',
         fields: {
           model: '型号',
@@ -337,6 +338,7 @@ const landingContent = {
         loading: 'Loading the 3D mainboard model...',
         error: 'The 3D mainboard model could not be loaded.',
         retry: 'Reload model',
+        gestureHint: 'Tip: use two fingers to rotate or zoom the board model',
         componentSelectAria: 'Select a mainboard component to inspect',
         fields: {
           model: 'Model',

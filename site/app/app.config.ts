@@ -4,6 +4,51 @@ export default defineAppConfig({
       primary: 'sky',
       neutral: 'slate'
     },
+    button: {
+      slots: {
+        base: 'rounded-md font-semibold tracking-normal'
+      },
+      variants: {
+        size: {
+          xs: {
+            base: 'h-7 gap-1 px-2 py-0 text-xs',
+            leadingIcon: 'size-4',
+            trailingIcon: 'size-4'
+          },
+          sm: {
+            base: 'h-8 gap-1.5 px-2.5 py-0 text-xs',
+            leadingIcon: 'size-4',
+            trailingIcon: 'size-4'
+          },
+          md: {
+            base: 'h-9 gap-2 px-3 py-0 text-sm',
+            leadingIcon: 'size-5',
+            trailingIcon: 'size-5'
+          },
+          lg: {
+            base: 'h-10 gap-2 px-3.5 py-0 text-sm',
+            leadingIcon: 'size-5',
+            trailingIcon: 'size-5'
+          },
+          xl: {
+            base: 'h-11 gap-2 px-4 py-0 text-base',
+            leadingIcon: 'size-5',
+            trailingIcon: 'size-5'
+          }
+        }
+      },
+      compoundVariants: [
+        { size: 'xs', square: true, class: { base: 'size-7 justify-center p-0' } },
+        { size: 'sm', square: true, class: { base: 'size-8 justify-center p-0' } },
+        { size: 'md', square: true, class: { base: 'size-9 justify-center p-0' } },
+        { size: 'lg', square: true, class: { base: 'size-10 justify-center p-0' } },
+        { size: 'xl', square: true, class: { base: 'size-11 justify-center p-0' } },
+        {
+          variant: 'ghost',
+          class: { base: 'focus-visible:ring-2 focus-visible:ring-primary' }
+        }
+      ]
+    },
     footer: {
       slots: {
         root: 'border-t border-default',

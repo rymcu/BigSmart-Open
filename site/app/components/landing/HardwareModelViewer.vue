@@ -16,6 +16,7 @@ const colorMode = useColorMode()
 const { content } = useLandingContent()
 
 const root = useTemplateRef<HTMLElement>('root')
+const stageWrap = useTemplateRef<HTMLElement>('stageWrap')
 const scene = useTemplateRef<SceneExpose>('scene')
 const activeId = ref('overview')
 const shouldLoad = ref(false)
@@ -101,6 +102,16 @@ function selectComponent(id: string) {
   }
 }
 
+// On compact layouts the canvas sits above the controls, so bring it back
+// into view whenever the selection changes to keep the 3D feedback visible.
+watch(activeId, () => {
+  if (!compact.value) return
+  stageWrap.value?.scrollIntoView({
+    behavior: reducedMotion.value ? 'auto' : 'smooth',
+    block: 'nearest'
+  })
+})
+
 function resetView() {
   activeId.value = 'overview'
   void nextTick(() => scene.value?.resetView())
@@ -125,7 +136,10 @@ onMounted(() => {
     ref="root"
     class="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_23rem] xl:grid-cols-[minmax(0,1fr)_25rem]"
   >
-    <div class="relative h-[clamp(25rem,62svh,34rem)] min-w-0 overflow-hidden lg:h-[clamp(34rem,64vh,44rem)]">
+    <div
+      ref="stageWrap"
+      class="relative h-[clamp(25rem,62svh,34rem)] min-w-0 overflow-hidden lg:h-[clamp(34rem,64vh,44rem)]"
+    >
       <NuxtImg
         v-if="!sceneReady"
         :src="fallbackImage"
@@ -171,7 +185,7 @@ onMounted(() => {
 
       <div
         v-if="sceneError || !webglSupported"
-        class="absolute inset-x-4 bottom-5 flex flex-wrap items-center justify-between gap-3 border border-default bg-default/95 px-4 py-3 shadow-sm sm:inset-x-auto sm:left-5 sm:right-5"
+        class="absolute inset-x-4 bottom-5 flex flex-wrap items-center justify-between gap-3 border border-default bg-default/95 px-4 py-3 shadow-sm sm:inset-x-5"
         role="alert"
       >
         <p class="text-sm font-medium text-highlighted">
@@ -187,6 +201,13 @@ onMounted(() => {
           @click="retryModel"
         />
       </div>
+
+      <p
+        v-if="sceneReady"
+        class="absolute bottom-3 left-3 rounded-md border border-default bg-default/92 px-2.5 py-1.5 text-xs text-muted lg:hidden"
+      >
+        {{ explorer.gestureHint }}
+      </p>
 
       <div
         v-if="sceneReady"
@@ -250,11 +271,13 @@ onMounted(() => {
         <h3 class="text-base font-semibold text-highlighted">
           {{ explorer.title }}
         </h3>
-        <span
-          class="size-2 shrink-0 rounded-full"
-          :class="sceneReady ? 'bg-success' : sceneError ? 'bg-error' : 'bg-warning'"
-          aria-hidden="true"
-        />
+        <UTooltip :text="statusText">
+          <span
+            class="size-2 shrink-0 rounded-full"
+            :class="sceneReady ? 'bg-success' : sceneError ? 'bg-error' : 'bg-warning'"
+            aria-hidden="true"
+          />
+        </UTooltip>
       </div>
 
       <p
@@ -278,7 +301,7 @@ onMounted(() => {
       >
         <button
           type="button"
-          class="flex min-h-11 w-full items-center justify-between gap-4 border-b border-default px-2 py-2.5 text-left transition-colors"
+          class="flex min-h-11 w-full items-center justify-between gap-4 border-b border-default px-2 py-2.5 text-left transition-colors focus-visible:-outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
           :class="activeId === 'overview' ? 'bg-elevated text-highlighted' : 'text-muted hover:bg-elevated/60 hover:text-highlighted'"
           :aria-pressed="activeId === 'overview'"
           @click="selectComponent('overview')"
@@ -294,7 +317,7 @@ onMounted(() => {
           v-for="componentItem in components"
           :key="componentItem.id"
           type="button"
-          class="grid min-h-11 w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center border-b border-default px-2 py-2.5 text-left transition-colors"
+          class="grid min-h-11 w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center border-b border-default px-2 py-2.5 text-left transition-colors focus-visible:-outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
           :class="activeId === componentItem.id ? 'bg-elevated text-highlighted' : 'text-muted hover:bg-elevated/60 hover:text-highlighted'"
           :aria-pressed="activeId === componentItem.id"
           @click="selectComponent(componentItem.id)"

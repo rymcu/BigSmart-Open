@@ -37,3 +37,12 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Unified button overrides for dark-background sections */
+.btn-on-dark-outline {
+  @apply bg-transparent text-white ring-white/40 hover:bg-white/10;
+}
+
+.btn-on-dark-ghost {
+  @apply text-white hover:bg-white/10;
+}

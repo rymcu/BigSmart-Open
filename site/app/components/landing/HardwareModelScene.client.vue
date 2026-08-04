@@ -510,10 +510,15 @@ defineExpose({
 }
 
 .hardware-hotspot:hover,
-.hardware-hotspot:focus-visible,
 .hardware-hotspot--active {
   border-color: #fbbf24;
   background: #b45309;
-  outline: none;
+}
+
+.hardware-hotspot:focus-visible {
+  border-color: #fbbf24;
+  background: #b45309;
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 </style>
