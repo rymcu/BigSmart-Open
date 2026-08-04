@@ -18,10 +18,10 @@ pnpm build
 For the GitHub Pages project site, build with the repository base path:
 
 ```bash
-NUXT_APP_BASE_URL=/BigSmart-Open/ pnpm exec nuxt build --preset github_pages
+pnpm build:pages
 ```
 
-Preview the generated GitHub Pages artifact locally with the same repository base path:
+This wraps `NUXT_APP_BASE_URL=/BigSmart-Open/ nuxt build --preset github_pages` so it works on any shell. Preview the generated GitHub Pages artifact locally with the same repository base path:
 
 ```bash
 pnpm preview:pages

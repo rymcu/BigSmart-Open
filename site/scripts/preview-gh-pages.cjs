@@ -46,7 +46,7 @@ function resolveFile(pathname) {
   return fs.existsSync(filePath) && fs.statSync(filePath).isFile() ? filePath : null
 }
 
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   const url = new URL(req.url || '/', 'http://127.0.0.1')
   let pathname = decodeURIComponent(url.pathname)
 
@@ -72,6 +72,17 @@ http.createServer((req, res) => {
     'content-type': types.get(path.extname(filePath).toLowerCase()) || 'application/octet-stream'
   })
   fs.createReadStream(filePath).pipe(res)
-}).listen(port, '127.0.0.1', () => {
+})
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${port} is already in use. Stop the existing preview server or pass another port:`)
+    console.error(`  node scripts/preview-gh-pages.cjs .output/public ${port + 1}`)
+    process.exit(1)
+  }
+  throw error
+})
+
+server.listen(port, '127.0.0.1', () => {
   console.log(`Preview: http://127.0.0.1:${port}${prefix}/`)
 })

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "build:pages": "node scripts/build-gh-pages.cjs",
     "generate": "nuxt generate",
     "dev": "nuxt dev",
     "model:build": "node scripts/step-to-glb.mjs",
